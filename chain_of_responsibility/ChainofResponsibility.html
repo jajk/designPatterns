@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+	<head>
+		<title>Chain_of_Responsibility</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	</head>
+	<body>
+		<script>
+		    /*Chain of responsibility*/
+			var NO_TOPIC = -1;
+            var Topic;
+            function Handler(s, t){
+			    this.successor = s || null;
+				this.topic = t || 0;
+			};
+            Handler.prototype = {
+			    handle: function(){
+				    //亮点
+					if(this.successor){
+					    this.successor.handle();
+					}
+				},
+				has: function(){
+				    return this.topic != NO_TOPIC;
+				}
+			};	
+            var app = new Handler({
+			    handle: function(){
+				    console.log('app handle');
+				}
+			}, 3);
+            var dialog = new Handler(app, 1);
+			dialog.handle = function(){
+				console.log('I am dialog');
+				//自身处理后，再调用继承者处理
+				Handler.prototype.handle.call(this);
+			};
+            var button = new Handler(dialog, 2);
+            button.handle();			
+		</script>
+	</body>
+</html>
